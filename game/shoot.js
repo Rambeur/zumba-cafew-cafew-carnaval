@@ -51,6 +51,14 @@ function bullet_collision()
             player1.bullets.splice(i, 1);
             i--;
         }
+        if (Math.abs(player1.bullets[i].position.x) - ennemi1.position.x <= 10 &&
+            Math.abs(player1.bullets[i].position.y)- ennemi1.position.y <= 10 )
+        {
+            scene.remove(ennemi1.graphic);
+            scene.remove(player1.bullets[i]);
+            player1.bullets.splice(i, 1);
+            i--;
+        }
     }
 
 }
@@ -60,7 +68,8 @@ function player_collision()
     //collision between player and walls
     var x = player1.graphic.position.x + WIDTH / 2;
     var y = player1.graphic.position.y + HEIGHT / 2;
-
+    if ( x < 0 )
+        player1.graphic.position.x -= x;
     if ( x > WIDTH )
         player1.graphic.position.x -= x - WIDTH;
     if ( y < 0 )

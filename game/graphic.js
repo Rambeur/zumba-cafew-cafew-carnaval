@@ -1,4 +1,4 @@
-function init()
+function init(life)
 {
     // set some camera attributes
     var VIEW_ANGLE = 45,
@@ -23,16 +23,19 @@ function init()
     $container.append(renderer.domElement);
 
     noGround = [];
-    ground = new Ground(0xffffff, WIDTH, HEIGHT, 10);
+    ground = new Ground(0xffffff, WIDTH, HEIGHT, 10, life);
     
-    player1 = new Player("player1", 0xffff00, new THREE.Vector2(50, 0), 0);
+    // player1 = new Player("player1", 0xffff00, new THREE.Vector2(50, 0), 0);
     scene.add(player1.graphic);
+
+    ennemi1 = new Player("ennemi1", 0xffff00, new THREE.Vector2(50, 0), 0);
+    scene.add(ennemi1.graphic);
 
     light1 = new Light("sun", 0xffffff, "0,0,340");
     scene.add(light1);
 }
 
-function Ground(color, size_x, size_y, nb_tile)
+function Ground(color, size_x, size_y, nb_tile, life)
 {
     colors = Array(0xff0000, 0x00ff00, 0x0000ff, 0x000000);
 
@@ -43,6 +46,8 @@ function Ground(color, size_x, size_y, nb_tile)
     sizeOfTileY = size_y / nb_tile;
     minY = -(size_y/2);
     maxY = (size_y/2);
+
+    var onBlock = false;
 
     for (x = minX; x <= maxX; x = x+sizeOfTileX){
         for (y = minY; y <= maxY; y = y+sizeOfTileY){
@@ -57,6 +62,9 @@ function Ground(color, size_x, size_y, nb_tile)
                 tmpGround.position.x = x;
                 tmpGround.position.y = y;
                 scene.add(tmpGround);
+                if (onBlock == false) {
+                    player1 = new Player("player1", 0xffff00, new THREE.Vector2(tmpGround.position.x, tmpGround.position.y), 0,life);
+                }
             }
             else
                 noGround.push([x, y]);
@@ -66,7 +74,7 @@ function Ground(color, size_x, size_y, nb_tile)
 
 function Light(name, color, position)
 {
-    pointLight = new THREE.PointLight(color, 50, 350);
+    pointLight = new THREE.PointLight(color, 50, 1350);
 
     pointLight.position.x = position.split(',')[0];
     pointLight.position.y = position.split(',')[1];
